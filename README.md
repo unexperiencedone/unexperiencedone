@@ -20,7 +20,7 @@
 
 <img src="assets/h-prologue.svg" width="100%" alt="Prologue · प्रस्तावना"/>
 
-I came up as a gamer (IGL for a Free Fire squad), and somewhere along the way the centre of gravity moved from **playing to building**. Now I'm a third-year **B.Tech CSE (AI)** student at **CSJM University, Kanpur**, **Co-founder & VP Tech at [Kaiketsu Tech](https://www.kaiketsutech.online)**, and founder of the hackathon squad **Void Walkers**.
+I came up as a gamer, and somewhere along the way the centre of gravity moved from **playing to building**. Now I'm a third-year **B.Tech CSE (AI)** student at **CSJM University, Kanpur**, **Co-founder & VP Tech at [Kaiketsu Tech](https://www.kaiketsutech.online)**, and founder of the hackathon squad **Void Walkers**.
 
 I work across the whole stack: I fine-tune the model, put an API around it, and ship the product in front of real users. I'm as happy arguing about backend routing as about a hero animation, and I'll pick premium craft over templates every time.
 
