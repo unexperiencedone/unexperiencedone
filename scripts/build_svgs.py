@@ -118,8 +118,22 @@ def shaped_path(alias: str, text: str, x: float, y: float, size: float, anchor: 
     return pen.getCommands()
 
 
-_OUTLINED = {"rozha": "Rozha", "amita": "Amita"}  # Devanagari display faces drawn as paths
-_DISPLAY_TEXT = re.compile(r'<text class="(rozha|amita)( [^"]*)?"([^>]*)>([^<]*)</text>')
+# classes whose <text> is drawn as shaped paths: Devanagari display faces, plus
+# out* aliases for Latin titles that need an ink-stroke draw (pathLength=1)
+_OUTLINED = {"rozha": "Rozha", "amita": "Amita", "outx": "MuktaX", "outb": "MuktaB", "outr": "Mukta"}
+_DISPLAY_TEXT = re.compile(r'<text class="(rozha|amita|outx|outb|outr)( [^"]*)?"([^>]*)>([^<]*)</text>')
+
+
+def measure(alias: str, text: str, size: float) -> float:
+    """Advance width of text in px, shaped exactly as the browser will shape it."""
+    import uharfbuzz as hb
+    shaped_path(alias, " ", 0, 0, size)  # warms the shaper cache
+    hb_font, tt = _SHAPERS[alias]
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(hb_font, buf)
+    return sum(p.x_advance for p in buf.glyph_positions) * size / tt["head"].unitsPerEm
 
 
 def _outline_display(body: str) -> str:
@@ -556,6 +570,243 @@ def footer() -> str:
     return svg_doc(W, H, "To be continued", css, body)
 
 
+# ---------------------------------------------------------------- animated text blocks
+
+TEXT_CSS = f"""
+    .w{{opacity:0;animation:wIn .55s {EASE_SETTLE} forwards}}
+    @keyframes wIn{{from{{opacity:0;transform:translateY(10px)}}to{{opacity:1;transform:none}}}}
+    .hl{{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);animation:grow .5s {EASE_INK} forwards}}
+    @keyframes grow{{to{{transform:scaleX(1)}}}}
+    .wipe{{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);animation:grow .7s {EASE_INK} forwards}}
+    .rise{{opacity:0;animation:rise .7s {EASE_SETTLE} forwards}}
+    @keyframes rise{{from{{opacity:0;transform:translateY(10px)}}to{{opacity:1;transform:none}}}}
+    .pop{{opacity:0;transform-box:fill-box;transform-origin:center;animation:pop .5s cubic-bezier(.34,1.8,.5,1) forwards}}
+    @keyframes pop{{0%{{opacity:0;transform:scale(2) rotate(-14deg)}}100%{{opacity:1;transform:scale(1) rotate(-3deg)}}}}
+    .ink{{fill:transparent;stroke:{INK};stroke-width:1.2;stroke-dasharray:1;stroke-dashoffset:1;
+      animation:inkDraw 1.5s cubic-bezier(.35,.1,.25,1) forwards,inkFill .5s ease forwards}}
+    @keyframes inkDraw{{to{{stroke-dashoffset:0}}}}
+    @keyframes inkFill{{to{{fill:{INK};stroke-width:.2}}}}
+    .blink{{animation:blink 1s steps(1) infinite}}
+    @keyframes blink{{50%{{opacity:0}}}}
+    .pulse{{transform-box:fill-box;transform-origin:center;animation:pulse 1.6s ease-in-out infinite}}
+    @keyframes pulse{{50%{{transform:scale(1.6);opacity:.35}}}}
+"""
+
+
+def flow(text: str, x: float, y: float, width: float, size: float, lh: float, t0: float,
+         step: float = 0.03, color: str = INK) -> tuple[str, float, float]:
+    """Word-by-word rising paragraph; **phrases** go bold and get a pink highlighter sweep.
+
+    Returns (svg, baseline of last line, time the last word starts).
+    """
+    tokens = [(w, i % 2 == 1) for i, part in enumerate(text.split("**")) for w in part.split()]
+    space = measure("Mukta", " ", size)
+    lines, cur, cx = [], [], 0.0
+    for word, bold in tokens:
+        ww = measure("MuktaB" if bold else "Mukta", word, size)
+        if cur and cx + ww > width:
+            lines.append(cur)
+            cur, cx = [], 0.0
+        cur.append((word, bold, cx, ww))
+        cx += ww + space
+    lines.append(cur)
+
+    words, marks, t = [], [], t0
+    for li, line in enumerate(lines):
+        yy = y + li * lh
+        run = None
+        for word, bold, wx, ww in line:
+            words.append(f'<text class="{"muktab" if bold else "mukta"} w rm-show" x="{x + wx:.1f}" y="{yy:.1f}" '
+                         f'font-size="{size}" fill="{color}" style="animation-delay:{t:.2f}s">{html.escape(word)}</text>')
+            if bold:
+                if run is None:
+                    run = [wx, 0.0, yy, t]
+                run[1] = wx + ww
+            elif run is not None:
+                marks.append(run)
+                run = None
+            t += step
+        if run is not None:
+            marks.append(run)
+    hl = "".join(
+        f'<rect class="hl rm-show" x="{x + a - 4:.1f}" y="{yy - size * 0.74:.1f}" width="{b - a + 8:.1f}" height="{size * 0.98:.1f}" '
+        f'fill="{SPOT}" opacity=".26" style="animation-delay:{ts + 0.35:.2f}s"/>'
+        for a, b, yy, ts in marks)
+    return hl + "".join(words), y + (len(lines) - 1) * lh, t
+
+
+def prologue() -> str:
+    W = 1200
+    p1 = ("I came up as a gamer, and somewhere along the way the centre of gravity moved from "
+          "**playing to building.** Now I'm a third-year **B.Tech CSE (AI)** student at CSJM University, Kanpur, "
+          "**Co-founder & VP Tech at Kaiketsu Tech,** and founder of the hackathon squad **Void Walkers.**")
+    p2 = ("I work across the whole stack: I fine-tune the model, put an API around it, and **ship the product** "
+          "in front of real users. I'm as happy arguing about backend routing as about a hero animation, "
+          "and I'll pick **premium craft over templates** every time.")
+    a, y1, t1 = flow(p1, 64, 76, 1080, 22, 36, 0.3)
+    b, y2, t2 = flow(p2, 64, y1 + 56, 1080, 22, 36, t1 + 0.25)
+    hy = y2 + 62
+    H = int(hy + 34)
+    hi = "खिलाड़ी से निर्माता, निर्माता से संस्थापक।"
+    hw = measure("Amita", hi, 26)
+    body = f"""
+<defs>{halftone('ht', 1.5, 8)}<clipPath id="hiw"><rect class="wipe" x="60" y="{hy - 36}" width="{hw + 12:.0f}" height="52" style="animation-delay:{t2 + 0.5:.2f}s"/></clipPath></defs>
+<rect width="{W}" height="{H}" fill="{PAPER}"/>
+<polygon points="{poly([(W - 260, 0), (W, 0), (W, 200)])}" fill="url(#ht)" opacity=".16"/>
+<rect x="2" y="2" width="{W - 4}" height="{H - 4}" fill="none" stroke="{INK}" stroke-width="4"/>
+<rect x="24" y="0" width="156" height="30" fill="{INK}"/>
+<text class="outb" x="40" y="21" font-size="14" fill="{PAPER}">NARRATION · कथा</text>
+{a}{b}
+<g clip-path="url(#hiw)"><text class="amita" x="66" y="{hy}" font-size="26" fill="{SPOT}">{hi}</text></g>
+<path class="draw rm-show" pathLength="1" d="M66 {hy + 12} C{66 + hw * .3:.0f} {hy + 6} {66 + hw * .7:.0f} {hy + 18} {66 + hw:.0f} {hy + 10}"
+  fill="none" stroke="{INK}" stroke-width="3" stroke-linecap="round" style="animation:grow 0s,inkDraw .6s {EASE_INK} {t2 + 1.1:.2f}s forwards"/>
+"""
+    return svg_doc(W, H, "Prologue: " + re.sub(r"\*\*", "", p1 + " " + p2) + " " + hi, TEXT_CSS, body)
+
+
+def now_panel() -> str:
+    W, H = 1200, 262
+    cols = [
+        ("RESEARCH · शोध", 24, ["Affective computing & emotion ambiguity", "Multi-agent and voice-first systems",
+                                "Lightweight multimodal fusion", "TinyML and edge inference"], False),
+        ("RIGHT NOW · अभी", 612, ["Nova: a local voice OS for Windows 11", "Drishtikon: VLM for satellite imagery",
+                                  "Drafting the AirGated paper for arXiv", "Exoplanet hunts on TESS light curves"], True),
+    ]
+    out, clips = [f'<rect width="{W}" height="{H}" fill="{PAPER}"/>'], []
+    for ci, (label, x0, items, live) in enumerate(cols):
+        bw = 564
+        out.append(f'<rect x="{x0}" y="18" width="{bw}" height="{H - 36}" fill="{PAPER}" stroke="{INK}" stroke-width="4"/>')
+        lw = measure("MuktaB", label, 15) + 30
+        out.append(f'<rect x="{x0}" y="18" width="{lw:.0f}" height="32" fill="{INK}"/>'
+                   f'<text class="outb" x="{x0 + 15}" y="40" font-size="15" fill="{PAPER}">{label}</text>')
+        if live:
+            out.append(f'<g class="rise" style="animation-delay:.2s"><circle class="pulse" cx="{x0 + bw - 70}" cy="34" r="6" fill="{SPOT}"/>'
+                       f'<text class="mono blink" x="{x0 + bw - 56}" y="39" font-size="13" fill="{SPOT}">LIVE</text></g>')
+        for k, item in enumerate(items):
+            y = 92 + k * 44
+            d = 0.35 + ci * 0.25 + k * 0.32
+            iw = measure("Mukta", item, 20)
+            cid = f"r{ci}{k}"
+            clips.append(f'<clipPath id="{cid}"><rect class="wipe" x="{x0 + 46}" y="{y - 24}" width="{iw + 8:.0f}" height="34" style="animation-delay:{d + .12:.2f}s"/></clipPath>')
+            # an ink block runs ahead of the reveal, like a brush laying the line down
+            out.append(f'<rect class="pop" x="{x0 + 22}" y="{y - 14}" width="12" height="12" fill="{SPOT if live else INK}" style="animation-delay:{d:.2f}s"/>'
+                       f'<g clip-path="url(#{cid})"><text class="mukta" x="{x0 + 50}" y="{y}" font-size="20" fill="{INK}">{html.escape(item)}</text></g>'
+                       f'<rect x="{x0 + 46}" y="{y - 22}" width="10" height="30" fill="{INK}" opacity="0" '
+                       f'style="animation:runner .7s {EASE_INK} {d + .12:.2f}s forwards;--to:{iw:.0f}px"/>')
+    css = TEXT_CSS + """
+    @keyframes runner{0%{opacity:1;transform:translateX(0)}90%{opacity:1;transform:translateX(var(--to))}100%{opacity:0;transform:translateX(var(--to))}}
+    """
+    body = f"<defs>{''.join(clips)}</defs>" + "".join(out)
+    label = "Research: " + "; ".join(cols[0][2]) + ". Right now: " + "; ".join(cols[1][2]) + "."
+    return svg_doc(W, H, label, css, body)
+
+
+TITLES = {
+    "nova": ("Nova · AssisstantOS", "658 TESTS · BUILT IN 15 DAYS", "a voice OS that gets cheaper"),
+    "vedavoice": ("VedaVoice", "FINALIST · MIND INSTALLERS 4.0", "a.k.a. Parchi"),
+    "airgated": ("AirGated", "PAPER IN PREP · arXiv", "offline identity"),
+    "void": ("Void / AmbiSense", "ENTERED · OPENCV AI 2026", "edge emotion"),
+    "civicpulse": ("CivicPulse", "BUILD WITH BHARAT 2.0", "jurisdiction routing"),
+    "exoplanet": ("Exoplanet Hunt", "ACTIVE · TESS DATA", "light curves"),
+    "student": ("CSJMU Assistant", "MULTI-TIER RAG", "for my university"),
+    "robo": ("Robo Rumble 3.0", "113 / 292 COMMITS", "most of anyone"),
+    "riseup": ("Rise UP School", "IN PRODUCTION", "81 endpoints"),
+}
+
+
+def title_card(title: str, stamp: str, aside: str) -> str:
+    """Compact (620px) so it stays legible when GitHub squeezes it into a table cell."""
+    W, H = 620, 128
+    size = 46
+    tw = measure("MuktaX", title, size)
+    sw = measure("MuktaB", stamp, 17) + 28
+    body = f"""
+<defs>{halftone('ht', 1.4, 7)}</defs>
+<rect width="{W}" height="{H}" fill="{PAPER}"/>
+<polygon points="{poly([(W - 150, 0), (W, 0), (W, 110)])}" fill="url(#ht)" opacity=".2"/>
+<g class="pop" style="animation-delay:.05s"><rect x="14" y="30" width="20" height="20" fill="{SPOT}" stroke="{INK}" stroke-width="3" transform="rotate(45 24 40)"/></g>
+<text class="outx ink" x="48" y="56" font-size="{size}" style="animation-delay:.15s,1.2s">{html.escape(title)}</text>
+<path class="draw rm-show" pathLength="1" d="M48 70 C{48 + tw * .35:.0f} 64 {48 + tw * .7:.0f} 76 {48 + tw:.0f} 68" fill="none" stroke="{SPOT}" stroke-width="4"
+  stroke-linecap="round" style="animation:inkDraw .6s {EASE_INK} 1.3s forwards"/>
+<g class="pop" style="animation-delay:1.6s">
+  <rect x="50" y="84" width="{sw:.0f}" height="32" fill="{SPOT}" stroke="{INK}" stroke-width="2.5"/>
+  <text class="muktab" x="{50 + sw / 2:.0f}" y="106" text-anchor="middle" font-size="17" fill="{PAPER}">{html.escape(stamp)}</text>
+</g>
+<text class="amita rise" x="{50 + sw + 18:.0f}" y="108" font-size="21" fill="{INK2}" style="animation-delay:1.9s">{html.escape(aside)}</text>
+<rect x="1.5" y="1.5" width="{W - 3}" height="{H - 3}" fill="none" stroke="{INK}" stroke-width="3"/>
+"""
+    return svg_doc(W, H, f"{title}: {stamp}", TEXT_CSS, body)
+
+
+def tickers() -> str:
+    W, H = 1200, 172
+    en = ["FINALIST · MIND INSTALLERS 4.0", "FINALIST · HACKSHODH", "113 / 292 COMMITS · ROBO RUMBLE 3.0",
+          "SIH 2026 · TEAM VAYU", "BUILD WITH BHARAT 2.0", "OPENCV AI COMPETITION 2026",
+          "GOOGLE GENAI APAC 2026", "VP TECH · KAIKETSU TECH"]
+    hi = ["फ़ाइनलिस्ट", "हैकाथॉन", "कमिट", "दल", "शोध", "निर्माण", "जीत", "जारी"]
+    en_s = "   •   ".join(en) + "   •   "
+    hi_s = "  ✦  ".join(hi) + "  ✦  "
+    le = measure("MuktaX", en_s, 24)
+    lh_ = measure("Rozha", hi_s.replace("✦", "•"), 30)
+    en_copies = "".join(f'<text class="muktax" x="{i * le:.1f}" y="0" font-size="24" fill="{PAPER}">{html.escape(en_s)}</text>' for i in range(3))
+    hi_copies = "".join(f'<text class="rozha" x="{i * lh_:.1f}" y="0" font-size="30" fill="{INK}">{hi_s.replace("✦", "•")}</text>' for i in range(4))
+    css = f"""
+    .tA{{animation:tA 38s linear infinite}} @keyframes tA{{to{{transform:translateX(-{le:.1f}px)}}}}
+    .tB{{animation:tB 30s linear infinite}} @keyframes tB{{from{{transform:translateX(-{lh_:.1f}px)}}to{{transform:translateX(0)}}}}
+    """
+    body = f"""
+<rect width="{W}" height="{H}" fill="{PAPER}"/>
+<g transform="rotate(-0.4 600 124)">
+  <rect x="-40" y="100" width="{W + 80}" height="48" fill="{SPOT}" stroke="{INK}" stroke-width="3"/>
+  <g transform="translate(0 135)"><g class="tB">{hi_copies}</g></g>
+</g>
+<g transform="rotate(-1.4 600 50)">
+  <rect x="-40" y="24" width="{W + 80}" height="52" fill="{INK}"/>
+  <g transform="translate(0 59)"><g class="tA">{en_copies}</g></g>
+</g>
+<rect x="2" y="2" width="{W - 4}" height="{H - 4}" fill="none" stroke="{INK}" stroke-width="4"/>
+"""
+    return svg_doc(W, H, "Feats: " + "; ".join(en), css, body)
+
+
+def contact_bubble() -> str:
+    W, H = 1200, 214
+    line = "The next arc starts with a message."
+    size = 34
+    tw = measure("MuktaX", line, size)
+    x0 = (W - tw) / 2
+    # one keyframe per character, so the caret lands on real glyph boundaries
+    n, dur, start = len(line), 2.2, 0.5
+    kf_clip, kf_caret = [], []
+    for i in range(n + 1):
+        pct = i / n * 100
+        w = measure("MuktaX", line[:i], size) if i else 0.0
+        kf_clip.append(f"{pct:.2f}%{{transform:scaleX({w / tw:.4f})}}")
+        kf_caret.append(f"{pct:.2f}%{{transform:translateX({w:.1f}px)}}")
+    css = TEXT_CSS + f"""
+    .type{{transform-box:fill-box;transform-origin:0 50%;transform:scaleX(0);animation:type {dur}s steps(1,end) {start}s forwards}}
+    @keyframes type{{{''.join(kf_clip)}}}
+    .caret{{animation:caret {dur}s steps(1,end) {start}s forwards}}
+    @keyframes caret{{{''.join(kf_caret)}}}
+    """
+    sub = "Internships · research collaborations · hackathon teams · a website for your business"
+    t_end = start + dur
+    bubble = (f"M140 30 Q140 18 156 18 L1044 18 Q1060 18 1060 30 L1060 148 Q1060 160 1044 160 "
+              f"L640 160 L596 196 L604 160 L156 160 Q140 160 140 148 Z")
+    body = f"""
+<defs><clipPath id="tc"><rect class="type" x="{x0 - 2:.1f}" y="40" width="{tw + 6:.1f}" height="60"/></clipPath></defs>
+<g class="pop" style="animation-delay:.05s;animation-name:bub">
+  <path d="{bubble}" fill="{PAPER}" stroke="{INK}" stroke-width="4" stroke-linejoin="round"/>
+</g>
+<g clip-path="url(#tc)"><text class="muktax" x="{x0:.1f}" y="82" font-size="{size}" fill="{INK}">{html.escape(line)}</text></g>
+<g class="caret"><rect class="blink" x="{x0 + 2:.1f}" y="52" width="4" height="38" fill="{SPOT}"/></g>
+<text class="amita rise" x="600" y="122" text-anchor="middle" font-size="24" fill="{SPOT}" style="animation-delay:{t_end + .1:.2f}s">एक ईमेल काफ़ी है।</text>
+<text class="mukta rise" x="600" y="148" text-anchor="middle" font-size="16" fill="{INK2}" style="animation-delay:{t_end + .35:.2f}s">{html.escape(sub)}</text>
+"""
+    css += "@keyframes bub{0%{opacity:0;transform:scale(.7)}100%{opacity:1;transform:none}}"
+    return svg_doc(W, H, f"{line} एक ईमेल काफ़ी है। {sub}", css, body)
+
+
 # ---------------------------------------------------------------- main
 
 HEADERS = {
@@ -571,9 +822,13 @@ HEADERS = {
 
 def main() -> None:
     ASSETS.mkdir(exist_ok=True)
-    out = {"cover.svg": cover(), "arcs.svg": arcs(), "nova.svg": nova(), "footer.svg": footer()}
+    out = {"cover.svg": cover(), "arcs.svg": arcs(), "nova.svg": nova(), "footer.svg": footer(),
+           "prologue.svg": prologue(), "now.svg": now_panel(), "feats-ticker.svg": tickers(),
+           "contact.svg": contact_bubble()}
     for key, args in HEADERS.items():
         out[f"h-{key}.svg"] = header(*args)
+    for key, args in TITLES.items():
+        out[f"t-{key}.svg"] = title_card(*args)
     for name, svg in out.items():
         (ASSETS / name).write_text(svg, encoding="utf-8")
         print(f"{name:16s} {len(svg) / 1024:7.1f} KB")

@@ -8,11 +8,7 @@
 
 <a href="https://aakshantkumar.vercel.app"><img src="assets/cover.svg" width="100%" alt="आक्षांत कुमार / Aakshant Kumar: I train models and ship the products around them."/></a>
 
-<a href="https://aakshantkumar.vercel.app"><img src="https://img.shields.io/badge/Portfolio-Aakshant_Kumar-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=vercel&logoColor=f5f5f2" alt="Portfolio · आक्षांत कुमार"/></a>
-<a href="https://www.linkedin.com/in/kumaraakshant"><img src="https://img.shields.io/badge/LinkedIn-kumaraakshant-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="LinkedIn"/></a>
-<a href="mailto:kumaraakshant2005@gmail.com"><img src="https://img.shields.io/badge/Email-Write_to_me-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=gmail&logoColor=f5f5f2" alt="Email"/></a>
-<a href="https://www.kaiketsutech.online"><img src="https://img.shields.io/badge/Kaiketsu_Tech-VP_Tech-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="Kaiketsu Tech"/></a>
-<a href="https://huggingface.co/unexperiencedone"><img src="https://img.shields.io/badge/Hugging_Face-Spaces-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=huggingface&logoColor=ffd21e" alt="Hugging Face"/></a>
+<a href="https://aakshantkumar.vercel.app"><img src="https://img.shields.io/badge/Portfolio-Aakshant_Kumar-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=vercel&logoColor=f5f5f2" alt="Portfolio · आक्षांत कुमार"/></a> <a href="https://www.linkedin.com/in/kumaraakshant"><img src="https://img.shields.io/badge/LinkedIn-kumaraakshant-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="LinkedIn"/></a> <a href="mailto:kumaraakshant2005@gmail.com"><img src="https://img.shields.io/badge/Email-Write_to_me-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=gmail&logoColor=f5f5f2" alt="Email"/></a> <a href="https://www.kaiketsutech.online"><img src="https://img.shields.io/badge/Kaiketsu_Tech-VP_Tech-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="Kaiketsu Tech"/></a> <a href="https://huggingface.co/unexperiencedone"><img src="https://img.shields.io/badge/Hugging_Face-Spaces-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=huggingface&logoColor=ffd21e" alt="Hugging Face"/></a>
 
 <a href="https://aakshantkumar.vercel.app"><img src="https://readme-typing-svg.demolab.com?font=Mukta&weight=700&size=22&duration=2600&pause=900&color=FF1F6F&center=true&vCenter=true&width=760&lines=Panel+1%3A+train+the+model.;Panel+2%3A+wrap+it+in+an+API.;Panel+3%3A+ship+the+product+people+use.;%E0%A4%AE%E0%A5%89%E0%A4%A1%E0%A4%B2+%E0%A4%B8%E0%A5%87+%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A5%8B%E0%A4%A1%E0%A4%95%E0%A5%8D%E0%A4%9F+%E0%A4%A4%E0%A4%95+%E2%80%94+%E0%A4%9C%E0%A4%BE%E0%A4%B0%E0%A5%80+%E0%A4%B0%E0%A4%B9%E0%A5%87%E0%A4%97%E0%A4%BE%E2%80%A6" alt="Typing: train the model, wrap it in an API, ship the product"/></a>
 
@@ -20,40 +16,18 @@
 
 <img src="assets/h-prologue.svg" width="100%" alt="Prologue · प्रस्तावना"/>
 
-I came up as a gamer, and somewhere along the way the centre of gravity moved from **playing to building**. Now I'm a third-year **B.Tech CSE (AI)** student at **CSJM University, Kanpur**, **Co-founder & VP Tech at [Kaiketsu Tech](https://www.kaiketsutech.online)**, and founder of the hackathon squad **Void Walkers**.
+<img src="assets/prologue.svg" width="100%" alt="I came up as a gamer, and somewhere along the way the centre of gravity moved from playing to building. Now I'm a third-year B.Tech CSE (AI) student at CSJM University, Kanpur, Co-founder &amp; VP Tech at Kaiketsu Tech, and founder of the hackathon squad Void Walkers. I work across the whole stack: I fine-tune the model, put an API around it, and ship the product in front of real users. खिलाड़ी से निर्माता, निर्माता से संस्थापक।"/>
 
-I work across the whole stack: I fine-tune the model, put an API around it, and ship the product in front of real users. I'm as happy arguing about backend routing as about a hero animation, and I'll pick premium craft over templates every time.
+<img src="assets/now.svg" width="100%" alt="Research: affective computing and emotion ambiguity; multi-agent and voice-first systems; lightweight multimodal fusion; TinyML and edge inference. Right now: Nova, a local voice OS for Windows 11; Drishtikon, a VLM for satellite imagery (SIH 2026); drafting the AirGated paper for arXiv; exoplanet hunts on TESS light curves."/>
 
-<table>
-<tr>
-<td width="50%" valign="top">
-
-**Research interests · शोध**
-
-- Affective computing & emotion ambiguity
-- Multi-agent and voice-first systems
-- Lightweight multimodal fusion
-- TinyML and edge inference
-
-</td>
-<td width="50%" valign="top">
-
-**Right now · अभी**
-
-- Building **Nova**, a local voice OS for Windows 11
-- **Drishtikon**: VLM for satellite imagery (SIH 2026 · ISRO)
-- Drafting the **AirGated** paper for arXiv
-- Running exoplanet hunts on **TESS** light curves
-
-</td>
-</tr>
-</table>
+<sub>→ studio: <a href="https://www.kaiketsutech.online">kaiketsutech.online</a> · squad: Void Walkers · full story: <a href="https://aakshantkumar.vercel.app">aakshantkumar.vercel.app</a></sub>
 
 > **Off the clock:** chess on Chess.com as `insanelyhuman` · original Hindi & Urdu poetry · macro photography & sketching · anime & light novels
 
 <img src="assets/h-work.svg" width="100%" alt="The work · कारनामे"/>
 
-### ◆ Nova · AssisstantOS
+<a href="https://github.com/unexperiencedone/assistant-"><img src="assets/t-nova.svg" width="620" alt="Nova · AssisstantOS: 658 tests, built in 15 days"/></a>
+
 A voice assistant that lives on the machine and **gets cheaper the longer you use it**. Every request falls through six tiers, cheapest first. Speech in and out runs 100% locally (faster-whisper). Claude Code is the last resort, and each time it solves something, it leaves behind a recipe so the next request doesn't need it.
 
 <img src="assets/nova.svg" width="100%" alt="Nova request cascade: instant intent, saved automation, paraphrase match, free model, Groq with 25 tools, Claude Code"/>
@@ -68,8 +42,8 @@ A voice assistant that lives on the machine and **gets cheaper the longer you us
 <tr>
 <td width="50%" valign="top">
 
-### ◆ VedaVoice · *a.k.a. Parchi*
-**🏆 Finalist, Mind Installers Hackathon 4.0**
+<a href="https://vedavoice.vercel.app"><img src="assets/t-vedavoice.svg" width="100%" alt="VedaVoice (a.k.a. Parchi): Finalist, Mind Installers Hackathon 4.0"/></a>
+
 
 *"रमेश को 500 उधार दिए"* → `{ name: रमेश, amount: ₹500, type: उधार }`
 
@@ -82,8 +56,8 @@ A voice-to-ledger for shopkeepers who talk in Hinglish, not forms. A **DistilBER
 </td>
 <td width="50%" valign="top">
 
-### ◆ AirGated
-**📄 Paper in preparation for arXiv**
+<a href="https://github.com/unexperiencedone/airgated-"><img src="assets/t-airgated.svg" width="100%" alt="AirGated: paper in preparation for arXiv"/></a>
+
 
 Offline, un-spoofable classroom attendance. The teacher's laptop *is* the network: captive-portal DNS, a WebSocket latency gate, ARP MAC resolution, a **non-extractable RSA-2048** device key in IndexedDB, and a **MediaPipe face + blink** liveness check. Six gates, each one blocking a specific cheap trick.
 
@@ -96,8 +70,8 @@ Offline, un-spoofable classroom attendance. The teacher's laptop *is* the networ
 <tr>
 <td width="50%" valign="top">
 
-### ◆ Void / AmbiSense · Edge emotion
-**🎯 Entered, OpenCV AI Competition 2026**
+<a href="https://github.com/unexperiencedone/lightweight-emotion-detection"><img src="assets/t-void.svg" width="100%" alt="Void / AmbiSense: entered, OpenCV AI Competition 2026"/></a>
+
 
 It started as a hybrid **DistilBERT + LSTM** emotion classifier (TorchScript on HF Spaces). Now it's an on-device **multimodal ambiguity detector** across text, voice prosody and face. It uses int8 models, a sticky-HMM instant emotion, Dirichlet mood over time, and calibrated late fusion that flags `conflict` instead of forcing a label.
 
@@ -108,8 +82,8 @@ It started as a hybrid **DistilBERT + LSTM** emotion classifier (TorchScript on 
 </td>
 <td width="50%" valign="top">
 
-### ◆ CivicPulse
-**Build With Bharat 2.0 · team Localhost**
+<img src="assets/t-civicpulse.svg" width="100%" alt="CivicPulse: Build With Bharat 2.0, team Localhost"/>
+
 
 A pothole on NH-19 belongs to NHAI. The same pothole 44 m away belongs to Kanpur Nagar Nigam. No classifier can see that, so CivicPulse routes complaints through a **Jurisdiction Registry** (road ownership, wards, utilities, defect-liability periods), starts an SLA clock, and escalates when it breaches.
 
@@ -122,8 +96,8 @@ A pothole on NH-19 belongs to NHAI. The same pothole 44 m away belongs to Kanpur
 <tr>
 <td width="50%" valign="top">
 
-### ◆ Exoplanet detection from noisy light curves
-**Active · solo research build**
+<img src="assets/t-exoplanet.svg" width="100%" alt="Exoplanet detection from noisy light curves: active solo research build"/>
+
 
 Real **TESS** data and real catalogue labels. The plan: classical astrophysics where it's the right tool (detrending, **Transit Least Squares**, `batman` fits, MCMC with `emcee`), deep learning where it earns its place, and uncertainty quantification throughout.
 
@@ -134,8 +108,8 @@ Real **TESS** data and real catalogue labels. The plan: classical astrophysics w
 </td>
 <td width="50%" valign="top">
 
-### ◆ CSJMU Student Assistant
-**Multi-tier RAG for my own university**
+<a href="https://github.com/unexperiencedone/student_assistant_system"><img src="assets/t-student.svg" width="100%" alt="CSJMU Student Assistant: multi-tier RAG"/></a>
+
 
 It scrapes notices, syllabus PDFs and exam schedules (SHA-256 dedup), embeds them on a local CPU pipeline with sentence-transformers, and answers questions over **Supabase pgvector** with Groq. Fixing the similarity-search and embedding bottlenecks was most of the work.
 
@@ -148,8 +122,8 @@ It scrapes notices, syllabus PDFs and exam schedules (SHA-256 dedup), embeds the
 <tr>
 <td width="50%" valign="top">
 
-### ◆ Robo Rumble 3.0
-**113 / 292 commits, the most of any contributor**
+<a href="https://robo-rumble-3-0.vercel.app"><img src="assets/t-robo.svg" width="100%" alt="Robo Rumble 3.0: 113 of 292 commits, the most of any contributor"/></a>
+
 
 The official site for a national robotics competition. I led the frontend, backend and UI in Next.js, React 19, TypeScript and Tailwind, with Three.js visuals.
 
@@ -158,8 +132,8 @@ The official site for a national robotics competition. I led the frontend, backe
 </td>
 <td width="50%" valign="top">
 
-### ◆ Rise UP Public School
-**In production**
+<a href="https://riseuppublicschool.vercel.app"><img src="assets/t-riseup.svg" width="100%" alt="Rise UP Public School: in production"/></a>
+
 
 A public site, a parent and student portal, and an admin panel behind one secure API: **81 REST endpoints**, 7 roles with RBAC and row-level scoping, JWT refresh rotation, idempotent Razorpay settlement, and email, SMS and WhatsApp behind one orchestrator.
 
@@ -255,6 +229,8 @@ A public site, a parent and student portal, and an admin panel behind one secure
 
 <img src="assets/h-feats.svg" width="100%" alt="Feats · उपलब्धियाँ"/>
 
+<img src="assets/feats-ticker.svg" width="100%" alt="Finalist, Mind Installers 4.0 · Finalist, HACKSHODH · 113 / 292 commits, Robo Rumble 3.0 · SIH 2026, team VAYU · Build With Bharat 2.0 · OpenCV AI Competition 2026 · Google GenAI APAC 2026 · VP Tech, Kaiketsu Tech"/>
+
 | | Feat | Where |
 |:-:|---|---|
 | 🏆 | **Finalist**, Mind Installers Hackathon 4.0 (VedaVoice / Parchi) | IIMT, Greater Noida |
@@ -289,8 +265,7 @@ A public site, a parent and student portal, and an admin panel behind one secure
 
 <div align="center">
 
-**The next arc starts with a message.** Internships, research collaborations, hackathon teams, or a website for your business.
-<br><sub>एक ईमेल काफ़ी है।</sub>
+<a href="mailto:kumaraakshant2005@gmail.com"><img src="assets/contact.svg" width="100%" alt="The next arc starts with a message. एक ईमेल काफ़ी है। Internships, research collaborations, hackathon teams, a website for your business."/></a>
 
 <a href="mailto:kumaraakshant2005@gmail.com"><img src="https://img.shields.io/badge/kumaraakshant2005@gmail.com-ff1f6f?style=for-the-badge&logo=gmail&logoColor=f5f5f2" alt="Email"/></a>
 <a href="https://www.linkedin.com/in/kumaraakshant"><img src="https://img.shields.io/badge/LinkedIn-0d0d0d?style=for-the-badge" alt="LinkedIn"/></a>
