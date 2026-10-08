@@ -1,0 +1,4 @@
+scripts/.fonts/
+.playwright-mcp/
+assets/_*.html
+__pycache__/
