@@ -8,11 +8,11 @@
 
 <a href="https://aakshantkumar.vercel.app"><img src="assets/cover.svg" width="100%" alt="आक्षांत कुमार / Aakshant Kumar: I train models and ship the products around them."/></a>
 
-<a href="https://aakshantkumar.vercel.app"><img src="https://img.shields.io/badge/Portfolio-आक्षांत_कुमार-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=vercel&logoColor=f5f5f2" alt="Portfolio"/></a>
-<a href="https://www.linkedin.com/in/kumaraakshant"><img src="https://img.shields.io/badge/LinkedIn-kumaraakshant-0d0d0d?style=for-the-badge&labelColor=ff1f6f" alt="LinkedIn"/></a>
-<a href="mailto:kumaraakshant2005@gmail.com"><img src="https://img.shields.io/badge/Email-एक_ईमेल_काफ़ी_है-0d0d0d?style=for-the-badge&logo=gmail&logoColor=ff1f6f" alt="Email"/></a>
-<a href="https://www.kaiketsutech.online"><img src="https://img.shields.io/badge/Kaiketsu_Tech-VP_Tech-0d0d0d?style=for-the-badge&logoColor=ff1f6f" alt="Kaiketsu Tech"/></a>
-<a href="https://huggingface.co/unexperiencedone"><img src="https://img.shields.io/badge/Hugging_Face-Spaces-0d0d0d?style=for-the-badge&logo=huggingface&logoColor=ffd21e" alt="Hugging Face"/></a>
+<a href="https://aakshantkumar.vercel.app"><img src="https://img.shields.io/badge/Portfolio-Aakshant_Kumar-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=vercel&logoColor=f5f5f2" alt="Portfolio · आक्षांत कुमार"/></a>
+<a href="https://www.linkedin.com/in/kumaraakshant"><img src="https://img.shields.io/badge/LinkedIn-kumaraakshant-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="LinkedIn"/></a>
+<a href="mailto:kumaraakshant2005@gmail.com"><img src="https://img.shields.io/badge/Email-Write_to_me-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=gmail&logoColor=f5f5f2" alt="Email"/></a>
+<a href="https://www.kaiketsutech.online"><img src="https://img.shields.io/badge/Kaiketsu_Tech-VP_Tech-ff1f6f?style=for-the-badge&labelColor=0d0d0d" alt="Kaiketsu Tech"/></a>
+<a href="https://huggingface.co/unexperiencedone"><img src="https://img.shields.io/badge/Hugging_Face-Spaces-ff1f6f?style=for-the-badge&labelColor=0d0d0d&logo=huggingface&logoColor=ffd21e" alt="Hugging Face"/></a>
 
 <a href="https://aakshantkumar.vercel.app"><img src="https://readme-typing-svg.demolab.com?font=Mukta&weight=700&size=22&duration=2600&pause=900&color=FF1F6F&center=true&vCenter=true&width=760&lines=Panel+1%3A+train+the+model.;Panel+2%3A+wrap+it+in+an+API.;Panel+3%3A+ship+the+product+people+use.;%E0%A4%AE%E0%A5%89%E0%A4%A1%E0%A4%B2+%E0%A4%B8%E0%A5%87+%E0%A4%AA%E0%A5%8D%E0%A4%B0%E0%A5%8B%E0%A4%A1%E0%A4%95%E0%A5%8D%E0%A4%9F+%E0%A4%A4%E0%A4%95+%E2%80%94+%E0%A4%9C%E0%A4%BE%E0%A4%B0%E0%A5%80+%E0%A4%B0%E0%A4%B9%E0%A5%87%E0%A4%97%E0%A4%BE%E2%80%A6" alt="Typing: train the model, wrap it in an API, ship the product"/></a>
 
