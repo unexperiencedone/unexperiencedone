@@ -3,8 +3,9 @@
 Styling mirrors https://aakshantkumar.vercel.app : paper / ink / spot pink,
 Rozha One + Amita + Mukta, ink-stroke reveals and "editor's circle" proofs.
 
-Fonts are subset per SVG and embedded as base64 WOFF so they render inside
-GitHub's <img> sandbox (which can't fetch web fonts).
+Display Devanagari (Rozha One) is shaped with HarfBuzz and outlined to paths;
+body fonts are subset per SVG and embedded as base64 WOFF so they render
+inside GitHub's <img> sandbox (which can't fetch web fonts).
 
     python scripts/build_svgs.py            # writes assets/*.svg
 """
@@ -74,9 +75,72 @@ def font_face(alias: str, text: str) -> str:
     return f"@font-face{{font-family:'{alias}';src:url(data:font/woff;base64,{b64}) format('woff');}}"
 
 
+_SHAPERS: dict[str, tuple] = {}
+
+
+def shaped_path(alias: str, text: str, x: float, y: float, size: float, anchor: str = "start") -> str:
+    """Shapes text with HarfBuzz on the *full* font and returns SVG outline data.
+
+    Used for display Devanagari: conjuncts and the joined shirorekha come out
+    exactly as the type designer intended, independent of the viewer's
+    browser or of what font subsetting keeps.
+    """
+    import uharfbuzz as hb
+    from fontTools.pens.svgPathPen import SVGPathPen
+    from fontTools.pens.transformPen import TransformPen
+
+    if alias not in _SHAPERS:
+        p = _font_path(alias)
+        blob = hb.Blob.from_file_path(str(p))
+        _SHAPERS[alias] = (hb.Font(hb.Face(blob)), TTFont(p))
+    hb_font, tt = _SHAPERS[alias]
+    upem = tt["head"].unitsPerEm
+    gs = tt.getGlyphSet()
+    order = tt.getGlyphOrder()
+
+    buf = hb.Buffer()
+    buf.add_str(text)
+    buf.guess_segment_properties()
+    hb.shape(hb_font, buf)
+
+    s = size / upem
+    width = sum(p.x_advance for p in buf.glyph_positions) * s
+    x0 = x - (width if anchor == "end" else width / 2 if anchor == "middle" else 0)
+
+    pen = SVGPathPen(gs, ntos=lambda v: f"{v:.1f}".rstrip("0").rstrip("."))
+    cx = cy = 0
+    for info, pos in zip(buf.glyph_infos, buf.glyph_positions):
+        gx = x0 + (cx + pos.x_offset) * s
+        gy = y - (cy + pos.y_offset) * s
+        gs[order[info.codepoint]].draw(TransformPen(pen, (s, 0, 0, -s, gx, gy)))
+        cx += pos.x_advance
+        cy += pos.y_advance
+    return pen.getCommands()
+
+
+_OUTLINED = {"rozha": "Rozha", "amita": "Amita"}  # Devanagari display faces drawn as paths
+_DISPLAY_TEXT = re.compile(r'<text class="(rozha|amita)( [^"]*)?"([^>]*)>([^<]*)</text>')
+
+
+def _outline_display(body: str) -> str:
+    """Replaces every <text class="rozha|amita …"> with a shaped <path>, keeping its other attributes."""
+    def repl(m: re.Match) -> str:
+        alias = _OUTLINED[m.group(1)]
+        classes, attrs, text = (m.group(2) or "").strip(), m.group(3), html.unescape(m.group(4))
+        get = lambda k, d=None: (re.search(rf'\b{k}="([^"]*)"', attrs) or [None, d])[1]
+        d = shaped_path(alias, text, float(get("x", 0)), float(get("y", 0)),
+                        float(get("font-size", 16)), get("text-anchor", "start"))
+        rest = re.sub(r'\s(x|y|font-size|text-anchor)="[^"]*"', "", attrs)
+        cls = f' class="{classes}"' if classes else ""
+        # pathLength lets the ink-draw animation use a 0..1 dash regardless of outline length
+        return f'<path{cls}{rest} pathLength="1" d="{d}"><title>{html.escape(text)}</title></path>'
+    return _DISPLAY_TEXT.sub(repl, body)
+
+
 def svg_doc(w: int, h: int, label: str, css: str, body: str) -> str:
     """Wraps body, embedding a subset of each font family referenced by a class."""
-    texts = " ".join(html.unescape(t) for t in re.findall(r">([^<>]+)<", body))
+    body = _outline_display(body)
+    texts =" ".join(html.unescape(t) for t in re.findall(r">([^<>]+)<", body))
     faces = [font_face(a, texts) for a in FONTS if re.search(rf"\b{a.lower()}\b", body)]
     base = f"""
     .rozha{{font-family:'Rozha',serif}} .amita{{font-family:'Amita',cursive}}
@@ -154,7 +218,7 @@ def cover() -> str:
     css = f"""
     .panel{{animation:draw 1s {EASE_INK} forwards}}
     @keyframes draw{{to{{stroke-dashoffset:0}}}}
-    .name{{fill:transparent;stroke:{INK};stroke-width:1.4;stroke-dasharray:1400;stroke-dashoffset:1400;
+    .name{{fill:transparent;stroke:{INK};stroke-width:1.4;stroke-dasharray:1;stroke-dashoffset:1;
       animation:ink 2.4s cubic-bezier(.35,.1,.25,1) .5s forwards,inkFill .6s ease 2s forwards}}
     @keyframes ink{{to{{stroke-dashoffset:0}}}}
     @keyframes inkFill{{to{{fill:{INK};stroke-width:.3}}}}
@@ -467,7 +531,7 @@ def nova() -> str:
 def footer() -> str:
     W, H = 1200, 230
     css = f"""
-    .name{{fill:transparent;stroke:{INK};stroke-width:1.3;stroke-dasharray:1600;stroke-dashoffset:1600;
+    .name{{fill:transparent;stroke:{INK};stroke-width:1.3;stroke-dasharray:1;stroke-dashoffset:1;
       animation:ink 2.2s cubic-bezier(.35,.1,.25,1) .2s forwards,inkFill .6s ease 1.6s forwards}}
     @keyframes ink{{to{{stroke-dashoffset:0}}}}
     @keyframes inkFill{{to{{fill:{INK};stroke-width:.3}}}}
